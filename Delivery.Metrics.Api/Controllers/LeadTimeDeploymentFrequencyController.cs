@@ -1,6 +1,8 @@
+using System.Net;
 using System.Threading.Tasks;
 using Delivery.Metrics.Common.Contracts;
 using Delivery.Metrics.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.Metrics.Controllers
@@ -16,16 +18,19 @@ namespace Delivery.Metrics.Controllers
         }
 
         [HttpPost("api/generateReport")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
+        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GenerateReport([FromBody] MetricsRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            await _reportingService.GenerateReport(request);
-            return Ok();
+            var response = await _reportingService.GenerateReport(request);
+            return new OkObjectResult(response);
         }
         
     }
