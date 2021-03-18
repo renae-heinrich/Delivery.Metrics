@@ -24,6 +24,7 @@ namespace Delivery.Metrics.Api.Tests.Controllers
         [Fact]
         public async Task GenerateReport_ShouldReturnOkObjectResult_WhenValidRequest()
         {
+            //Arrange
             var request = new MetricsRequest
             {
                 Metrics = new List<string> {"some string"},
@@ -66,10 +67,40 @@ namespace Delivery.Metrics.Api.Tests.Controllers
                 CsvTimeStamp = 1614140301623
             };
 
+            //Act
             var actual = await _controller.GenerateReport(request);
-
+            
+            //Assert
             var result = Assert.IsType<OkObjectResult>(actual);
             Assert.Equal(200, result.StatusCode);
+            await _reportingService.Received(1).GenerateReport(request);
+        }
+        
+        [Theory]
+        [MemberData(nameof(RequestInvalidValues))]
+        public async Task GenerateReport_ShouldReturnBadRequest_WhenInvalidRequest(MetricsRequest request, string propertyName)
+        {
+            //Arrange
+            _controller.ModelState.AddModelError(propertyName, "cannot be null");
+            
+            //Act
+            var actual = await _controller.GenerateReport(request);
+
+            //Assert
+            var result = Assert.IsType<BadRequestResult>(actual);
+            Assert.Equal(400, result.StatusCode);
+            await _reportingService.DidNotReceive().GenerateReport(Arg.Any<MetricsRequest>());
+        }
+
+        public static IEnumerable<object[]> RequestInvalidValues()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    new MetricsRequest {}, nameof(MetricsRequest)
+                }
+            };
         }
     }
 }
