@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Delivery.Metrics.Common.Contracts;
@@ -74,6 +75,120 @@ namespace Delivery.Metrics.Api.Tests.Controllers
             var result = Assert.IsType<OkObjectResult>(actual);
             Assert.Equal(200, result.StatusCode);
             await _reportingService.Received(1).GenerateReport(request);
+        }
+        
+        [Fact]
+        public async Task GenerateReport_ShouldReturnUnAuthorised_WhenServiceThrowsUnauthorizedAccessException()
+        {
+            //Arrange
+            var request = new MetricsRequest
+            {
+                Metrics = new List<string> {"some string"},
+                StartTime = 1612098000000,
+                EndTime = 1612098000000,
+                Pipeline = new Pipeline
+                {
+                    Type = "someType",
+                    Token = "someInvalidToken",
+                    Deployment = new List<Deployment>
+                    {
+                        new Deployment
+                        {
+                            OrgId = "someOrgId",
+                            OrgName = "someOrgName",
+                            Id = "someId",
+                            Name = "someName",
+                            Step = "someStep",
+                            Repository = "someRepository",
+                        }
+                    }
+                },
+                CodeBaseSetting = new CodeBaseSetting
+                {
+                    Type = "someType",
+                    Token = "someInvalidToken",
+                    LeadTime = new List<LeadTime>
+                    {
+                        new LeadTime
+                        {
+                            OrgId = "someOrgId",
+                            OrgName = "someOrgName",
+                            Id = "someId",
+                            Name = "someName",
+                            Step = "someStep",
+                            Repository = "someRepository",
+                        }
+                    }
+                },
+                CsvTimeStamp = 1614140301623
+            };
+            
+            _reportingService.When(x => x.GenerateReport(Arg.Any<MetricsRequest>()))
+                .Do(x => throw new UnauthorizedAccessException());
+
+            //Act
+            var actual = await _controller.GenerateReport(request);
+            
+            //Assert
+            var result = Assert.IsType<UnauthorizedObjectResult>(actual);
+            Assert.Equal(401, result.StatusCode);
+        }
+        
+         [Fact]
+        public async Task GenerateReport_ShouldReturnUnAuthorised_WhenServiceThrowsException()
+        {
+            //Arrange
+            var request = new MetricsRequest
+            {
+                Metrics = new List<string> {"some string"},
+                StartTime = 1612098000000,
+                EndTime = 1612098000000,
+                Pipeline = new Pipeline
+                {
+                    Type = "someType",
+                    Token = "someInvalidToken",
+                    Deployment = new List<Deployment>
+                    {
+                        new Deployment
+                        {
+                            OrgId = "someOrgId",
+                            OrgName = "someOrgName",
+                            Id = "someId",
+                            Name = "someName",
+                            Step = "someStep",
+                            Repository = "someRepository",
+                        }
+                    }
+                },
+                CodeBaseSetting = new CodeBaseSetting
+                {
+                    Type = "someType",
+                    Token = "someInvalidToken",
+                    LeadTime = new List<LeadTime>
+                    {
+                        new LeadTime
+                        {
+                            OrgId = "someOrgId",
+                            OrgName = "someOrgName",
+                            Id = "someId",
+                            Name = "someName",
+                            Step = "someStep",
+                            Repository = "someRepository",
+                        }
+                    }
+                },
+                CsvTimeStamp = 1614140301623
+            };
+            
+            _reportingService.When(x => x.GenerateReport(Arg.Any<MetricsRequest>()))
+                .Do(x => throw new Exception());
+
+            //Act
+            var actual = await _controller.GenerateReport(request);
+            
+            //Assert
+            var result = Assert.IsType<ObjectResult>(actual);
+            Assert.Equal(500, result.StatusCode);
         }
         
         [Theory]

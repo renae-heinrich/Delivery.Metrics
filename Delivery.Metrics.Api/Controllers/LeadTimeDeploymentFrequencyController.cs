@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Delivery.Metrics.Common.Contracts;
@@ -29,8 +30,21 @@ namespace Delivery.Metrics.Controllers
             {
                 return BadRequest();
             }
-            var response = await _reportingService.GenerateReport(request);
-            return new OkObjectResult(response);
+
+            try
+            {
+                var response = await _reportingService.GenerateReport(request);
+                return new OkObjectResult(response);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return new UnauthorizedObjectResult(e.Message);
+            }
+            catch (Exception e)
+            {
+                var result = StatusCode(StatusCodes.Status500InternalServerError, e);
+                return result; 
+            }
         }
         
     }
