@@ -19,7 +19,6 @@ namespace Delivery.Metrics.Api.Tests.Controllers
         {
             _reportingService = Substitute.For<IReportingService>();
             _controller = new LeadTimeDeploymentFrequencyController(_reportingService);
-            
         }
 
         [Fact]
@@ -81,53 +80,11 @@ namespace Delivery.Metrics.Api.Tests.Controllers
         public async Task GenerateReport_ShouldReturnUnAuthorised_WhenServiceThrowsUnauthorizedAccessException()
         {
             //Arrange
-            var request = new MetricsRequest
-            {
-                Metrics = new List<string> {"some string"},
-                StartTime = 1612098000000,
-                EndTime = 1612098000000,
-                Pipeline = new Pipeline
-                {
-                    Type = "someType",
-                    Token = "someInvalidToken",
-                    Deployment = new List<Deployment>
-                    {
-                        new Deployment
-                        {
-                            OrgId = "someOrgId",
-                            OrgName = "someOrgName",
-                            Id = "someId",
-                            Name = "someName",
-                            Step = "someStep",
-                            Repository = "someRepository",
-                        }
-                    }
-                },
-                CodeBaseSetting = new CodeBaseSetting
-                {
-                    Type = "someType",
-                    Token = "someInvalidToken",
-                    LeadTime = new List<LeadTime>
-                    {
-                        new LeadTime
-                        {
-                            OrgId = "someOrgId",
-                            OrgName = "someOrgName",
-                            Id = "someId",
-                            Name = "someName",
-                            Step = "someStep",
-                            Repository = "someRepository",
-                        }
-                    }
-                },
-                CsvTimeStamp = 1614140301623
-            };
-            
             _reportingService.When(x => x.GenerateReport(Arg.Any<MetricsRequest>()))
                 .Do(x => throw new UnauthorizedAccessException());
 
             //Act
-            var actual = await _controller.GenerateReport(request);
+            var actual = await _controller.GenerateReport(new MetricsRequest());
             
             //Assert
             var result = Assert.IsType<UnauthorizedObjectResult>(actual);
@@ -135,56 +92,14 @@ namespace Delivery.Metrics.Api.Tests.Controllers
         }
         
          [Fact]
-        public async Task GenerateReport_ShouldReturnUnAuthorised_WhenServiceThrowsException()
+        public async Task GenerateReport_ShouldReturnObjectResult_WhenServiceThrowsException()
         {
             //Arrange
-            var request = new MetricsRequest
-            {
-                Metrics = new List<string> {"some string"},
-                StartTime = 1612098000000,
-                EndTime = 1612098000000,
-                Pipeline = new Pipeline
-                {
-                    Type = "someType",
-                    Token = "someInvalidToken",
-                    Deployment = new List<Deployment>
-                    {
-                        new Deployment
-                        {
-                            OrgId = "someOrgId",
-                            OrgName = "someOrgName",
-                            Id = "someId",
-                            Name = "someName",
-                            Step = "someStep",
-                            Repository = "someRepository",
-                        }
-                    }
-                },
-                CodeBaseSetting = new CodeBaseSetting
-                {
-                    Type = "someType",
-                    Token = "someInvalidToken",
-                    LeadTime = new List<LeadTime>
-                    {
-                        new LeadTime
-                        {
-                            OrgId = "someOrgId",
-                            OrgName = "someOrgName",
-                            Id = "someId",
-                            Name = "someName",
-                            Step = "someStep",
-                            Repository = "someRepository",
-                        }
-                    }
-                },
-                CsvTimeStamp = 1614140301623
-            };
-            
             _reportingService.When(x => x.GenerateReport(Arg.Any<MetricsRequest>()))
                 .Do(x => throw new Exception());
 
             //Act
-            var actual = await _controller.GenerateReport(request);
+            var actual = await _controller.GenerateReport(new MetricsRequest());
             
             //Assert
             var result = Assert.IsType<ObjectResult>(actual);
