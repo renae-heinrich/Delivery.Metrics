@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Delivery.Metrics</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Configurations" />
+      <Folder Include="HttpClients" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Delivery.Metrics.Common\Delivery.Metrics.Common.csproj" />
+    </ItemGroup>
+
+</Project>
