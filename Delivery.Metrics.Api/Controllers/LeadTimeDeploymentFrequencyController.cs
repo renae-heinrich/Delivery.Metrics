@@ -30,7 +30,7 @@ namespace Delivery.Metrics.Controllers
             {
                 return BadRequest();
             }
-
+            
             try
             {
                 var response = await _reportingService.GenerateReport(request);
@@ -42,8 +42,7 @@ namespace Delivery.Metrics.Controllers
             }
             catch (Exception e)
             {
-                var result = StatusCode(StatusCodes.Status500InternalServerError, e);
-                return result; 
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         
