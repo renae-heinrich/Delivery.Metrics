@@ -5,8 +5,9 @@ namespace Delivery.Metrics.Api.Tests.Services
     public class ReportingServiceTests
     {
         [Fact]
-        public void Test1()
+        public void GenerateReport_CallsClient_GivenAValidRequest()
         {
+            
         }
     }
 }

@@ -68,7 +68,7 @@ namespace Delivery.Metrics.Api.Tests.Controllers
             };
 
             //Act
-            var actual = await _controller.GenerateReport(request);
+            var actual = await _controller.GenerateReport(new MetricsRequestDto());
             
             //Assert
             var result = Assert.IsType<OkObjectResult>(actual);
@@ -84,7 +84,7 @@ namespace Delivery.Metrics.Api.Tests.Controllers
                 .Do(x => throw new UnauthorizedAccessException());
 
             //Act
-            var actual = await _controller.GenerateReport(new MetricsRequest());
+            var actual = await _controller.GenerateReport(new MetricsRequestDto());
             
             //Assert
             var result = Assert.IsType<UnauthorizedObjectResult>(actual);
@@ -99,7 +99,7 @@ namespace Delivery.Metrics.Api.Tests.Controllers
                 .Do(x => throw new Exception());
 
             //Act
-            var actual = await _controller.GenerateReport(new MetricsRequest());
+            var actual = await _controller.GenerateReport(new MetricsRequestDto());
             
             //Assert
             var result = Assert.IsType<ObjectResult>(actual);
@@ -114,7 +114,7 @@ namespace Delivery.Metrics.Api.Tests.Controllers
             _controller.ModelState.AddModelError(propertyName, "cannot be null");
             
             //Act
-            var actual = await _controller.GenerateReport(request);
+            var actual = await _controller.GenerateReport(new MetricsRequestDto());
 
             //Assert
             var result = Assert.IsType<BadRequestResult>(actual);
