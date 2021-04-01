@@ -1,19 +1,27 @@
 using System;
-using System.Globalization;
+using NodaTime;
+using NodaTime.Text;
 
 namespace Delivery.Metrics.Helpers
 {
     public static class StringToUnixTimeHelper
     {
-        public static long GetUnixTime(this string startTime)
-        {
-            //Utc time
-            var dt = DateTime.ParseExact(startTime, "dd/MM/yyyy", CultureInfo.InvariantCulture).Date;
-            return ((DateTimeOffset)dt).ToUnixTimeSeconds();
-            
-            //1616630400 = GMT: Thursday, 25 March 2021 00:00:00
-            //Your time zone: Thursday, 25 March 2021 11:00:00 GMT+11:00 DST - what is the impact of this??
+        
+        public static long GetUnixTime(this string localDate)
+        { 
+            var utcTime = LocalTimeToUtc(localDate);
+            return utcTime.ToUnixTimeSeconds();
         }
         
+        static DateTimeOffset LocalTimeToUtc(string localDate)
+        {
+            var pattern = LocalDateTimePattern.CreateWithInvariantCulture("dd/MM/yyyy");
+            LocalDateTime ldt = pattern.Parse(localDate).Value;
+            ZonedDateTime zdt = ldt.InZoneLeniently(DateTimeZoneProviders.Tzdb["Australia/Sydney"]);
+            Instant instant = zdt.ToInstant();
+            ZonedDateTime utc = instant.InUtc();
+
+            return utc.ToDateTimeOffset();
+        }
     }
 }
