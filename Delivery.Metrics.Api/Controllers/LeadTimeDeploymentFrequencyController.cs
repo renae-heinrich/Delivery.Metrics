@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Delivery.Metrics.Common.Contracts;
 using Delivery.Metrics.Services;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,13 @@ namespace Delivery.Metrics.Controllers
     public class LeadTimeDeploymentFrequencyController : ControllerBase
     {
         private readonly IReportingService _reportingService;
+        private IMapper _mapper;
         
-        public LeadTimeDeploymentFrequencyController(IReportingService reportingService)
+        public LeadTimeDeploymentFrequencyController(IReportingService reportingService, 
+            IMapper mapper)
         {
             _reportingService = reportingService;
+            _mapper = mapper;
         }
 
         [HttpPost("api/generateReport")]
@@ -27,8 +31,6 @@ namespace Delivery.Metrics.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GenerateReport([FromBody] MetricsRequestDto request)
         {
-            
-            //TODO: Need to map a DTO to MetricsRequest so user doesnt have to put in the unix code of the time
             if (!ModelState.IsValid)
             {
                 return BadRequest();
@@ -36,7 +38,8 @@ namespace Delivery.Metrics.Controllers
             
             try
             {
-                var response = await _reportingService.GenerateReport(new MetricsRequest());
+                var metricsRequest = _mapper.Map<MetricsRequest>(request);
+                var response = await _reportingService.GenerateReport(metricsRequest);
                 return new OkObjectResult(response);
             }
             catch (UnauthorizedAccessException e)
@@ -49,53 +52,5 @@ namespace Delivery.Metrics.Controllers
             }
         }
         
-    }
-
-    public class MetricsRequestDto
-    {
-        public List<string> Metrics { get; set; } = new List<string>();
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public PipelineDto Pipeline { get; set; }
-        public CodeBaseSettingDto CodeBaseSetting { get; set; }
-    }
-
-    public class PipelineDto
-    {
-        public string Type { get; set; }
-        public string Token { get; set; }
-        public List<DeploymentDto> Deployment { get; set; } = new List<DeploymentDto>();
-
-    }
-
-    public class CodeBaseSettingDto
-    {
-        public string Type { get; set; }
-        public string Token { get; set; }
-        public List<LeadTimeDto> LeadTime { get; set; } = new List<LeadTimeDto>();
-
-    }
-
-    public class LeadTimeDto
-    {
-        
-        public string OrgId { get; set; }
-        public string OrgName { get; set; }
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Step { get; set; }
-        public string Repository { get; set; }
-        
-    }
-
-    public class DeploymentDto
-    {
-        public string OrgId { get; set; }
-        public string OrgName { get; set; }
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Step { get; set; }
-        public string Repository { get; set; }
-
     }
 }

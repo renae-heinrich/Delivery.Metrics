@@ -1,6 +1,5 @@
 using AutoMapper;
 using Delivery.Metrics.Common.Contracts;
-using Delivery.Metrics.Controllers;
 using Delivery.Metrics.Helpers;
 
 namespace Delivery.Metrics.Profiles
@@ -17,6 +16,7 @@ namespace Delivery.Metrics.Profiles
                 .ForMember(dest => dest.EndTime,
                     opt => opt.MapFrom(
                         src => src.EndDate.GetUnixTime()));
+
         }
     }
 }
