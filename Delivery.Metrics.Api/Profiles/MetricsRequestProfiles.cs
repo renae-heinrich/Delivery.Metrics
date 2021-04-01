@@ -10,7 +10,13 @@ namespace Delivery.Metrics.Profiles
         public MetricsRequestProfiles()
         {
             CreateMap<MetricsRequestDto, MetricsRequest>()
-                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime.GetUnixTime()));
+                .ForMember(
+                    dest => dest.StartTime,
+                    opt => opt.MapFrom(
+                        src => src.StartDate.GetUnixTime()))
+                .ForMember(dest => dest.EndTime,
+                    opt => opt.MapFrom(
+                        src => src.EndDate.GetUnixTime()));
         }
     }
 }

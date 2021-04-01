@@ -54,8 +54,8 @@ namespace Delivery.Metrics.Controllers
     public class MetricsRequestDto
     {
         public List<string> Metrics { get; set; } = new List<string>();
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
         public PipelineDto Pipeline { get; set; }
         public CodeBaseSettingDto CodeBaseSetting { get; set; }
     }
