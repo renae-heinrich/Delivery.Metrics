@@ -5,7 +5,7 @@ namespace Delivery.Metrics.Services
 {
     public class ReportingService : IReportingService
     {
-        public Task GenerateReport(MetricsRequest request)
+        public Task<ReportResponse> GenerateReport(MetricsRequest request)
         {
             throw new System.NotImplementedException();
         }
