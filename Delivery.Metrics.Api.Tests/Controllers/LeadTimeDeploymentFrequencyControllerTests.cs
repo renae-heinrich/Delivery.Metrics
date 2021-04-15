@@ -37,16 +37,13 @@ namespace Delivery.Metrics.Api.Tests.Controllers
                 StartDate = "01/02/2021",
                 EndDate = "01/02/2021",
                 Metrics = new List<string>{"some metric"},
-                Pipeline = new Pipeline
+                PipelineDto = new PipelineDto
                 {
-                    Type = "someType",
                     Token = "someToken",
-                    Deployment = new List<Deployment>
+                    Deployment= new List<Deployment>
                     {
                         new Deployment
                         {
-                            OrgId = "someOrgId",
-                            OrgName = "someOrgName",
                             Id = "someId",
                             Name = "someName",
                             Step = "someStep",
@@ -54,16 +51,13 @@ namespace Delivery.Metrics.Api.Tests.Controllers
                         }
                     }
                 },
-                 CodeBaseSetting = new CodeBaseSetting
+                 CodeBaseSettingDto = new CodeBaseSettingDto
                  {
-                     Type = "someType",
                      Token = "someToken",
                      LeadTime = new List<LeadTime>
                      {
                          new LeadTime
                          {
-                             OrgId = "someOrgId",
-                             OrgName = "someOrgName",
                              Id = "someId",
                              Name = "someName",
                              Step = "someStep",

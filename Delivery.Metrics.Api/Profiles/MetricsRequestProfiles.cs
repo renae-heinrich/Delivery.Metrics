@@ -15,8 +15,12 @@ namespace Delivery.Metrics.Profiles
                         src => src.StartDate.GetUnixTime()))
                 .ForMember(dest => dest.EndTime,
                     opt => opt.MapFrom(
-                        src => src.EndDate.GetUnixTime()));
+                        src => src.EndDate.GetUnixTime()))
+                .ForMember(dest => dest.Pipeline, opt => opt.MapFrom(src => src.PipelineDto))
+                .ForMember(dest => dest.CodeBaseSetting, opt => opt.MapFrom(src => src.CodeBaseSettingDto));
 
+            CreateMap<Pipeline, PipelineDto>().ReverseMap();
+            CreateMap<CodeBaseSetting, CodeBaseSettingDto>().ReverseMap();
         }
     }
 }
