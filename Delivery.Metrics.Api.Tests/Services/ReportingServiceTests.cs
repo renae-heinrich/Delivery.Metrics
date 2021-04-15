@@ -16,8 +16,8 @@ namespace Delivery.Metrics.Api.Tests.Services
 
         public ReportingServiceTests()
         {
-            _reportingService = new ReportingService();
             _reportingServiceApiClient = Substitute.For<IReportingServiceApiClient>();
+            _reportingService = new ReportingService(_reportingServiceApiClient);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Delivery.Metrics.Api.Tests.Services
             var orgName = "someOrg";
             var step = "someStep";
             
-                var request = new MetricsRequest
+            var request = new MetricsRequest
             {
                 Metrics = new List<string>{"some metric"},
                 ConsiderHoliday = false,

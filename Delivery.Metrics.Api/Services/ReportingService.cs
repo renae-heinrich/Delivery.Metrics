@@ -1,17 +1,24 @@
-using System;
+
+using System.Text.Json;
 using System.Threading.Tasks;
 using Delivery.Metrics.Common.Contracts;
+using Delivery.Metrics.HttpClients;
+
 
 namespace Delivery.Metrics.Services
 {
     public class ReportingService : IReportingService
     {
-        public Task<ReportResponse> GenerateReport(MetricsRequest request)
+        private readonly IReportingServiceApiClient _reportingServiceApiClient;
+
+        public ReportingService(IReportingServiceApiClient reportingServiceApiClient)
         {
-           //create the payload
+            _reportingServiceApiClient = reportingServiceApiClient;
+        }
 
-           throw new NotImplementedException();
-
+        public async Task<string> GenerateReport(MetricsRequest request)
+        {
+            return JsonSerializer.Serialize(await _reportingServiceApiClient.GetReport(request));
         }
     }
 }
