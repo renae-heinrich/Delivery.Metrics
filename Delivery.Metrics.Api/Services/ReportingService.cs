@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Delivery.Metrics.Common.Contracts;
 
@@ -7,7 +8,10 @@ namespace Delivery.Metrics.Services
     {
         public Task<ReportResponse> GenerateReport(MetricsRequest request)
         {
-            throw new System.NotImplementedException();
+           //create the payload
+
+           throw new NotImplementedException();
+
         }
     }
 }
