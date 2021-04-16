@@ -5,6 +5,6 @@ namespace Delivery.Metrics.Services
 {
     public interface IReportingService
     {
-        public Task<ReportResponse> GenerateReport(MetricsRequest request);
+        public Task<string> GenerateReport(MetricsRequest request);
     }
 }

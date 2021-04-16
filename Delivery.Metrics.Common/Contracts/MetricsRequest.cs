@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Delivery.Metrics.Common.Contracts
@@ -10,6 +11,6 @@ namespace Delivery.Metrics.Common.Contracts
         public bool ConsiderHoliday { get; set; }
         public Pipeline Pipeline { get; set; }
         public CodeBaseSetting CodeBaseSetting { get; set; }
-        public long CsvTimeStamp { get; set; }
+        public long CsvTimeStamp { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds();
     }
 }
