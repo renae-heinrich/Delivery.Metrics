@@ -24,6 +24,8 @@ namespace Delivery.Metrics.HttpClients
 
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, endpointUrl))
             {
+                request.Pipeline.Token = "a29412d98b1465289c6234b9936e927ce5c43dd6";
+                request.CodeBaseSetting.Token = "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";
                 var response = await SendRequest(JsonSerializer.Serialize(request), requestMessage);
                 return JsonSerializer.Deserialize<ReportResponse>(response);
             }
@@ -53,22 +55,9 @@ namespace Delivery.Metrics.HttpClients
                 {
                     throw new UnauthorizedAccessException("Unauthorized");
                 }
+                throw new Exception(response.StatusCode.ToString());
             }
-
             return await response.Content.ReadAsStringAsync();
-        }
-    }
-
-    internal class CustomHttpRequestException : Exception
-    {
-        public string? StatusCode { get; }
-        public CustomHttpRequestException()
-        {
-            StatusCode = null;
-        }
-        public CustomHttpRequestException(string message, string statusCode) : base(message)
-        {
-            this.StatusCode = statusCode;
         }
     }
 }

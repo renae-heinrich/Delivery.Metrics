@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Delivery.Metrics.HttpClients;
 using Delivery.Metrics.Profiles;
+using Delivery.Metrics.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +20,11 @@ namespace Delivery.Metrics
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IReportingService, ReportingService>();
+            services.AddHttpClient<IReportingServiceApiClient, ReportingServiceApiClient>();
+            services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddAutoMapper(typeof(MetricsRequestProfiles));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,13 +34,12 @@ namespace Delivery.Metrics
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
+            else
             {
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-            });
+                app.UseExceptionHandler();
+            }
+
+            app.UseMvc();
         }
     }
 }

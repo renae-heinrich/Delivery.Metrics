@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Delivery.Metrics.Common.Contracts;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Delivery.Metrics.Controllers
 {
     [Produces("application/json")]
+    [ApiController]
     public class LeadTimeDeploymentFrequencyController : ControllerBase
     {
         private readonly IReportingService _reportingService;
@@ -20,8 +22,9 @@ namespace Delivery.Metrics.Controllers
             _reportingService = reportingService;
             _mapper = mapper;
         }
+        
 
-        [HttpPost("api/generateReport")]
+        [HttpPost("api/leadtimedeploymentfrequency")]
         
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -36,6 +39,7 @@ namespace Delivery.Metrics.Controllers
             
             try
             {
+                //not mapping the pipeline or codebase setting
                 var metricsRequest = _mapper.Map<MetricsRequest>(request);
                 var response = await _reportingService.GenerateReport(metricsRequest);
                 return new OkObjectResult(response);
