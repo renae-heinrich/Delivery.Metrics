@@ -24,8 +24,7 @@ namespace Delivery.Metrics.HttpClients
 
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, endpointUrl))
             {
-                request.Pipeline.Token = "a29412d98b1465289c6234b9936e927ce5c43dd6";
-                request.CodeBaseSetting.Token = "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";
+                
                 var response = await SendRequest(JsonSerializer.Serialize(request), requestMessage);
                 return JsonSerializer.Deserialize<ReportResponse>(response);
             }
